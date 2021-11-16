@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Recipe } from '../recipe.model';
 
 @Component({
@@ -8,6 +8,7 @@ import { Recipe } from '../recipe.model';
 })
 export class RecipeDetailsComponent implements OnInit {
 
+  @ViewChild("dropdownField") dropdownField: ElementRef;
   @Input() recipe: Recipe;
 
   constructor() { }
