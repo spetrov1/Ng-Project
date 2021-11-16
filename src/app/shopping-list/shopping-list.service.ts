@@ -19,4 +19,11 @@ export class ShoppingListService {
         this.ingredients.push(newIngredient);
         this.ingredientsChanged.emit(this.ingredients);
     }
+
+    addIngredients(ingredients: Ingredient[]) {
+        for (let ingredient of ingredients) {
+            this.ingredients.push(ingredient);
+        }
+        this.ingredientsChanged.emit(this.ingredients);
+    }
 }
