@@ -4,7 +4,7 @@ import { Recipe } from "./recipe.model";
 
 
 export class RecipesService {
-    itemIsSelected = new EventEmitter<Recipe>();
+    // itemIsSelected = new EventEmitter<Recipe>();
     
     private recipes = [
         new Recipe("Musaka", 
@@ -24,6 +24,10 @@ export class RecipesService {
 
     getRecipes() {
         return this.recipes.slice();
+    }
+
+    getRecipe(index: number) {
+      return this.recipes.slice()[index];
     }
 
 }

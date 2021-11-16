@@ -1,9 +1,8 @@
 
 <div class="container">  
 
-  <app-header (featureSelected)="navigate($event)"></app-header>
+  <app-header></app-header>
 
-  <app-recipes *ngIf=" featureActivated === 'recipes' "></app-recipes>
-  <app-shopping-list *ngIf=" featureActivated === 'shopping-list' "></app-shopping-list>
+  <router-outlet></router-outlet>
 
 </div>

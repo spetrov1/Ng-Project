@@ -9,10 +9,6 @@ import { ShoppingListService } from './shopping-list/shopping-list.service';
 })
 export class AppComponent {
   title = 'ng-project';
-  featureActivated = "recipes";
 
-  navigate(feature: string) {
-    this.featureActivated = feature;
-  }
 
 }
