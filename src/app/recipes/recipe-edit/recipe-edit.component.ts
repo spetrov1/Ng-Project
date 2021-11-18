@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { RecipesService } from '../recipes.service';
 
 @Component({
@@ -25,7 +26,7 @@ export class RecipeEditComponent implements OnInit {
         this.editMode = params['id'] != null;
         this.recipeId = +params['id'];
       }
-    )
+    );
 
     this.initForm();
   }
@@ -90,6 +91,8 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
-  
+  onDeleteIngredient(ingredientIndex: number) {
+    (<FormArray>this.recipeForm.get('ingredients')).removeAt(ingredientIndex);
+  }
 
 }
