@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { Ingredient } from "../shared/ingredient.model";
 import { Recipe } from "./recipe.model";
@@ -43,6 +44,11 @@ export class RecipesService {
 
     deleteRecipe(recipeIndex: number) {
       this.recipes.splice(recipeIndex, 1);
+      this.recipesChanged.next(this.recipes.slice());
+    }
+
+    setRecipes(recipes: Recipe[]) {
+      this.recipes = recipes;
       this.recipesChanged.next(this.recipes.slice());
     }
 
