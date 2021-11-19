@@ -16,9 +16,10 @@ import { DropdownDirective } from './shared/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { DefaultDetailsComponent } from './recipes/recipe-details/default/default-details/default-details.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { DataStorageService } from './shared/data-storage.service';
 import { RecipesService } from './recipes/recipes.service';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
+import { RecipesResolver } from './shared/recipes-resolver.service';
+import { DataStorageService } from './shared/data-storage.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import { ShoppingListService } from './shopping-list/shopping-list.service';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [RecipesService, ShoppingListService],
+  providers: [RecipesService, ShoppingListService, RecipesResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

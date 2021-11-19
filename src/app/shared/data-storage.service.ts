@@ -20,12 +20,14 @@ export class DataStorageService {
     }
 
     fetchData() {
-        // TODO transform the received data (in case there are no ingredients on a recipe --> add empty list)
         return this.http.get<Recipe[]>("https://ng-course-project-36953-default-rtdb.firebaseio.com/recipes.json")
                         .pipe(
                             tap( (recipes: Recipe[]) => {
-                                recipes.map( recipe => recipe.ingredients ? [] : recipe.ingredients = [] );
-                            })
+                                recipes.map( recipe => 
+                                                recipe.ingredients = recipe.ingredients ? recipe.ingredients : []
+                                            );
+                                }
+                            )
                         );
     }
 }
