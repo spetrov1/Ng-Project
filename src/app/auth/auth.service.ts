@@ -94,6 +94,11 @@ export class AuthService {
     }
 
     autoLogin() {
+
+        if (!localStorage.getItem("userData")) {
+            return;
+        }
+
         const user: {
             email: string,
             id: string,

@@ -23,6 +23,7 @@ import { AuthComponent } from './auth/auth.component';
 import { AuthService } from './auth/auth.service';
 import { LoadingSpinner } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './shared/interceptors/auth-interceptor.service';
+import { AuthGuard } from './shared/guards/auth-guard';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { AuthInterceptorService } from './shared/interceptors/auth-interceptor.s
     HttpClientModule
   ],
   providers: [RecipesService, ShoppingListService, RecipesResolver, AuthService,
-          { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }],
+          { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
+        AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
