@@ -16,21 +16,10 @@ export class DataStorageService {
 
     saveData() {
         const recipes = this.recipesService.getRecipes();
-        this.http.put<Recipe[]>("https://ng-course-project-36953-default-rtdb.firebaseio.com/recipes.json", recipes)
-                    .subscribe(response => console.log("post", response));
-        console.log(recipes);
+        this.http.put<Recipe[]>("https://ng-course-project-36953-default-rtdb.firebaseio.com/recipes.json", recipes).subscribe();
     }
 
     fetchData() {
-        return this.authService.userCreation.pipe(
-            take(1), 
-            exhaustMap( (user) => {
-                return this.http.get<Recipe[]>("https://ng-course-project-36953-default-rtdb.firebaseio.com/recipes.json",
-                {
-                    params: new HttpParams().append("auth", user.token)
-                })
-               }
-            )
-        );
+        return this.http.get<Recipe[]>("https://ng-course-project-36953-default-rtdb.firebaseio.com/recipes.json");
     }
 }
