@@ -5,11 +5,10 @@ export class User {
     constructor(public email: string,
         public id: string,
         private _token: string,
-        private _tokenExpirationTime: Date) {}
+        private _tokenExpirationDate: Date) {}
 
     get token() {
-        // TODO check if it is okay
-        if (new Date().getTime() > new Date().getTime() + this._tokenExpirationTime.getTime()) {
+        if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
             return null;
         }
         return this._token;
