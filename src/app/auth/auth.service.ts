@@ -20,6 +20,7 @@ export class AuthService {
     readonly firebaseSingUpUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
     readonly firebaseLoginUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
     userCreation = new BehaviorSubject<User>(null);
+    tokenExpirationTimer = null;
 
     constructor(private http: HttpClient,
         private router: Router) {}
@@ -75,12 +76,21 @@ export class AuthService {
 
         localStorage.setItem("userData", JSON.stringify(user));
 
+        this.autoLogout(+response.expiresIn * 1000);
+
         // this.userCreation.pipe(take(1)).subscribe(response => console.log("take2: ", response));
     }
 
     logout() {
         this.userCreation.next(null);
         this.router.navigate(["/auth"]);
+        localStorage.removeItem("userData");
+
+        if (this.tokenExpirationTimer) {
+            clearTimeout(this.tokenExpirationTimer);
+        }
+
+        this.tokenExpirationTimer = null;
     }
 
     autoLogin() {
@@ -101,6 +111,10 @@ export class AuthService {
             this.userCreation.next(loadedUser);
         }
 
+    }
+
+    autoLogout(expirationTime) {
+        this.tokenExpirationTimer = setTimeout(this.logout.bind(this), expirationTime);
     }
 
 }
