@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { tap } from "rxjs/operators"
+import { tap, map } from "rxjs/operators"
 
 import { Recipe } from "../recipes/recipe.model";
 import { RecipesService } from "../recipes/recipes.service";
@@ -18,8 +18,14 @@ export class RecipesResolver implements Resolve<Recipe[]> {
         state: RouterStateSnapshot): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
         
         return this.dataStorage.fetchData().pipe(
-            tap( recipes => this.recipesService.setRecipes(recipes))
+            tap( (recipes: Recipe[]) => {
+                recipes.map( recipe => 
+                                recipe.ingredients = recipe.ingredients ? recipe.ingredients : []
+                            );
+                }
+            ),
+            tap( recipes => this.recipesService.setRecipes(recipes) )
         );
     }
-    
+
 }

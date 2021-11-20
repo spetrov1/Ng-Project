@@ -1,7 +1,8 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { BehaviorSubject, throwError } from "rxjs";
+import { catchError, tap, take } from "rxjs/operators";
+import { User } from "./user/User";
 
 interface AuthenticationResponse {
     idToken: string;
@@ -17,6 +18,7 @@ export class AuthService {
 
     readonly firebaseSingUpUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
     readonly firebaseLoginUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
+    userCreation = new BehaviorSubject<User>(null);
 
     constructor(private http: HttpClient) {}
 
@@ -27,7 +29,8 @@ export class AuthService {
                 password: sentPassword,
                 returnSecureToken: true
             }).pipe(
-                catchError(this.handleError)
+                catchError(this.handleError),
+                tap(this.handleAuthentication)
             );
     }
 
@@ -38,23 +41,37 @@ export class AuthService {
                 password: sentPassword,
                 returnSecureToken: true
             }).pipe(
-                catchError(this.handleError)
+                catchError(this.handleError),
+                tap(this.handleAuthentication.bind(this))
             );
     }
 
-    private handleError(error: HttpErrorResponse) {
+    private handleError(errorRes: HttpErrorResponse) {
         let errorMsg;
-        console.log("Raw error", error);
+        console.log("Raw error", errorRes);
 
-        switch(error.error.error.message) {
+        switch(errorRes.error.error.message) {
             case "EMAIL_EXISTS": errorMsg = "Inputed email already exists"; break;
             case "EMAIL_NOT_FOUND": errorMsg = "Inputed email is not existing"; break;
             case "INVALID_PASSWORD": errorMsg = "Inputed password is not existing"; break;
             case "USER_DISABLED": errorMsg = "User is disabled"; break;
-            default: errorMsg = error.error.error.message;
+            default: errorMsg = errorRes.error.error.message;
         }
 
         return throwError(errorMsg);
+    }
+
+    private handleAuthentication(response: AuthenticationResponse) {        
+        const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+        const user = new User(response.email, 
+            response.localId, 
+            response.idToken,
+            expirationDate);
+
+        // console.log("test", user, response);
+        this.userCreation.next(user);
+
+        // this.userCreation.pipe(take(1)).subscribe(response => console.log("take2: ", response));
     }
 
 }
