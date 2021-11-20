@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Recipe } from '../recipes/recipe.model';
@@ -17,13 +18,15 @@ export class HeaderComponent implements OnInit {
 
   constructor(private dataStorage: DataStorageService,
     private recipesService: RecipesService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.subscription = this.authService.userCreation.subscribe(
       (user) => {
         if (!!user) {
           this.isAuthenticated = true;
+          this.router.navigate(["/recipes"]);
         }
       }
     )
@@ -40,6 +43,12 @@ export class HeaderComponent implements OnInit {
         this.recipesService.setRecipes(recipes);
       }
     );
+  }
+
+  onLogout() {
+    this.authService.userCreation.next(null);
+    this.isAuthenticated = false;
+    this.router.navigate(["/auth"]);
   }
 
 }
