@@ -3,7 +3,8 @@
 
     <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-    <div class="alert alert-danger" *ngIf="errorMsg"> {{errorMsg}} </div>
+    <!-- <div class="alert alert-danger" *ngIf="errorMsg"> {{errorMsg}} </div> -->
+    <alert [message]="errorMsg" *ngIf="errorMsg" (close)="onCloseAlert()"></alert>
 
     <form *ngIf="!isLoading" #authForm="ngForm" (ngSubmit)='onSubmit(authForm)'>
 

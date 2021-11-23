@@ -49,4 +49,8 @@ export class AuthComponent {
         );
     }
 
+    onCloseAlert() {
+        this.errorMsg = null;
+    }
+
 }
