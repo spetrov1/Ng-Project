@@ -7,10 +7,8 @@ import { RecipesComponent } from "../recipes.component";
 import { DefaultDetailsComponent } from "./default/default-details/default-details.component";
 import { RecipeDetailsComponent } from "./recipe-details.component";
 
-
-
 const routes: Routes = [
-    {path: 'recipes', component: RecipesComponent, children: [
+    {path: '', component: RecipesComponent, children: [
         {path: '', component: DefaultDetailsComponent},
         {path: 'new', component: RecipeEditComponent},
         {path: ':id', component: RecipeDetailsComponent},

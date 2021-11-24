@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { DropdownDirective } from "../shared/dropdown.directive";
 import { SharedModule } from "../shared/shared.module";
 import { DefaultDetailsComponent } from "./recipe-details/default/default-details/default-details.component";
 import { RecipeDetailsComponent } from "./recipe-details/recipe-details.component";
