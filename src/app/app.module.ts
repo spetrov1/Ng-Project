@@ -4,18 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { RecipesComponent } from './recipes/recipes.component';
 import { HeaderComponent } from './header/header.component';
-import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
-import { RecipeDetailsComponent } from './recipes/recipe-details/recipe-details.component';
-import { RecipeItemComponent } from './recipes/recipe-list/recipe-item/recipe-item.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 
 import { DropdownDirective } from './shared/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { DefaultDetailsComponent } from './recipes/recipe-details/default/default-details/default-details.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipesService } from './recipes/recipes.service';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipesResolver } from './shared/recipes-resolver.service';
@@ -25,20 +20,15 @@ import { LoadingSpinner } from './shared/loading-spinner/loading-spinner.compone
 import { AuthInterceptorService } from './shared/interceptors/auth-interceptor.service';
 import { AuthGuard } from './shared/guards/auth-guard';
 import { AlertComponent } from './shared/alert/alert.component';
+import { RecipesModule } from './recipes/recipes.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RecipesComponent,
     HeaderComponent,
-    RecipeListComponent,
-    RecipeDetailsComponent,
-    RecipeItemComponent,
     ShoppingListComponent,
     ShoppingEditComponent,
     DropdownDirective,
-    DefaultDetailsComponent,
-    RecipeEditComponent,
     AuthComponent,
     LoadingSpinner,
     AlertComponent
@@ -48,7 +38,8 @@ import { AlertComponent } from './shared/alert/alert.component';
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RecipesModule
   ],
   providers: [RecipesService, ShoppingListService, RecipesResolver, AuthService,
           { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
