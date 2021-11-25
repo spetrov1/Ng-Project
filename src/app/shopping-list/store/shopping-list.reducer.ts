@@ -24,6 +24,21 @@ export function shoppingListReducer(
                 ...state,
                 ingredients: [...state.ingredients, ...action.payload]
             }
+        case ShoppingListActions.UPDATE_INGREDIENT:
+            let newIngredients = [...state.ingredients];
+            let ingredientIndex = action.payload.ingredientIndex;
+            let newIngredient = action.payload.ingredient;
+            newIngredients[ingredientIndex] = newIngredient;
+            return {
+                ...state,
+                ingredients: newIngredients
+            }
+        case ShoppingListActions.DELETE_INGREDIENT:
+            const ingIndToIgnore = action.payload.ingredientIndex;
+            return {
+                ...state,
+                ingredients: state.ingredients.filter( (ing, ingIndex) => ingIndex !== ingIndToIgnore )
+            }
         default:
             console.log("action print ", action);
             return state;
