@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -12,32 +12,30 @@ import * as fromShoppingList from '../store/shopping-list.reducer';
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class ShoppingEditComponent implements OnInit {
+export class ShoppingEditComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
 
   editMode = false;
   ingredientIndex: number;
-  ingredient: Ingredient;
+  // ingredient: Ingredient;
   @ViewChild("f") form: NgForm;
 
   constructor(
-    private slService: ShoppingListService,
     private store: Store<fromShoppingList.AppState>) { }
 
   ngOnInit(): void {
-    this.subscription = this.slService.startedEditingIngredient.subscribe(
-      (ingIndex: number) => {
-        this.ingredientIndex = ingIndex;
+    this.subscription = this.store.select('shoppingList').subscribe(stateData => {
+      if (stateData.editedIngredientIndex > -1) {
         this.editMode = true;
-        this.ingredient = this.slService.getIngredient(ingIndex);
+        this.ingredientIndex = stateData.editedIngredientIndex;
         this.form.setValue( {
-          "name": this.ingredient.name,
-          "amount": this.ingredient.amount
+          "name": stateData.editedIngredient.name,
+          "amount": stateData.editedIngredient.amount
         } );
-        // TODO think about argument type that accept setValue ... I do not understand it
-        // this.form.setValue()
+      } else {
+        this.editMode = false;
       }
-    )
+    })
   }
 
   onAddOrUpdateItem() {
@@ -46,14 +44,8 @@ export class ShoppingEditComponent implements OnInit {
     const newIngredient = new Ingredient(formValue.name, formValue.amount);
 
     if (this.editMode) {
-      // this.slService.updateIngredient(this.ingredientIndex, newIngredient);
-      this.store.dispatch(new ShoppingListActions.UpdateIngredient( 
-        {
-          ingredientIndex: this.ingredientIndex, 
-          ingredient: newIngredient
-      }));
+      this.store.dispatch(new ShoppingListActions.UpdateIngredient(newIngredient));
     } else {
-      // this.slService.addIngredient( newIngredient );
       this.store.dispatch(new ShoppingListActions.AddIngredient(newIngredient));
     }
     this.onClear();
@@ -62,12 +54,18 @@ export class ShoppingEditComponent implements OnInit {
   onClear() {
     this.form.reset();
     this.editMode = false;
+    this.store.dispatch(new ShoppingListActions.StopEdit());
   }
 
   onDelete() {
-    // this.slService.deleteIngredient(this.ingredientIndex);
-    this.store.dispatch(new ShoppingListActions.DeleteIngredient({ingredientIndex: this.ingredientIndex}));
+    this.store.dispatch(new ShoppingListActions.DeleteIngredient());
     this.onClear();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    // TODO test if following line is not there
+    this.store.dispatch(new ShoppingListActions.StopEdit());
   }
 
 }

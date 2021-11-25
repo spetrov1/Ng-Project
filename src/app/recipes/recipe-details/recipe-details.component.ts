@@ -18,7 +18,7 @@ export class RecipeDetailsComponent implements OnInit {
   recipe: Recipe;
   recipeId: number;
 
-  constructor(private slService: ShoppingListService, 
+  constructor( 
         private route: ActivatedRoute,
         private router: Router,
         private recipesService: RecipesService,
@@ -34,7 +34,6 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   onAddToShoppingList() {
-    // this.slService.addIngredients(this.recipe.ingredients);
     this.store.dispatch(new ShoppingListActions.AddIngredients(this.recipe.ingredients));
   }
 
