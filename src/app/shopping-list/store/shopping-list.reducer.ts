@@ -1,12 +1,25 @@
 import { Ingredient } from "src/app/shared/ingredient.model";
 import * as ShoppingListActions from "./shopping-list.actions";
 
-const initialState = {
+// Why not to rename it to ShoppingListState
+interface State {
+    ingredients: Ingredient[];
+    editedIngredient: Ingredient;
+    editedIngredientIndex: number;
+}
+
+export interface AppState {
+    shoppingList: State
+}
+
+const initialState: State = {
     ingredients: [
         new Ingredient("Apple", 5),
         new Ingredient("Tomatoes", 10),
         new Ingredient("Tomatoes 2", 10)
-      ]
+      ],
+    editedIngredient: null,
+    editedIngredientIndex: -1
 }
 
 export function shoppingListReducer(
@@ -37,7 +50,7 @@ export function shoppingListReducer(
             const ingIndToIgnore = action.payload.ingredientIndex;
             return {
                 ...state,
-                ingredients: state.ingredients.filter( (ing, ingIndex) => ingIndex !== ingIndToIgnore )
+                ingredients: state.ingredients.filter( (_, ingIndex) => ingIndex !== ingIndToIgnore )
             }
         default:
             console.log("action print ", action);
