@@ -3,14 +3,10 @@ import * as ShoppingListActions from "./shopping-list.actions";
 
 // Why not to rename it to ShoppingListState
 // why not remove editedIngredient ?
-interface State {
+export interface State {
     ingredients: Ingredient[];
     editedIngredient: Ingredient;
     editedIngredientIndex: number;
-}
-
-export interface AppState {
-    shoppingList: State
 }
 
 const initialState: State = {

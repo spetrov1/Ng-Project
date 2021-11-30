@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { Recipe } from '../recipe.model';
 import { RecipesService } from '../recipes.service';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
-import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer';
+import * as fromApp from '../../store/app.reducer';
 
 @Component({
   selector: 'app-recipe-details',
@@ -22,7 +21,7 @@ export class RecipeDetailsComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private recipesService: RecipesService,
-        private store: Store<fromShoppingList.AppState>) { }
+        private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
