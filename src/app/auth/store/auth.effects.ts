@@ -1,7 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { dispatch } from 'rxjs/internal/observable/pairs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as AuthActions from '../store/auth.actions';
 import { User } from '../user/User';
@@ -13,8 +16,6 @@ interface AuthenticationResponse {
     expiresIn: string;
     localId: string;
     registered?: boolean;
-    // just to work for now
-    type;
 }
 
 @Injectable()
@@ -33,7 +34,7 @@ export class AuthEffects {
                     returnSecureToken: true
                 })
                 .pipe(
-                    map( (response) => {
+                    map( (response: AuthenticationResponse) => {
                         const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
                         const user = new User(
                             response.email, 
@@ -43,20 +44,20 @@ export class AuthEffects {
 
                         return new AuthActions.LoginSuccess(user);
                     })
-                    //,
-                    // catchError( (errorRes: HttpErrorResponse) => {
-                    //     let errorMsg;
+                    ,
+                    catchError( errorRes => {
+                        let errorMsg;
 
-                    //     switch(errorRes.error.error.message) {
-                    //         case "EMAIL_EXISTS": errorMsg = "Inputed email already exists"; break;
-                    //         case "EMAIL_NOT_FOUND": errorMsg = "Inputed email is not existing"; break;
-                    //         case "INVALID_PASSWORD": errorMsg = "Inputed password is not existing"; break;
-                    //         case "USER_DISABLED": errorMsg = "User is disabled"; break;
-                    //         default: errorMsg = errorRes.error.error.message;
-                    //     }
+                        switch(errorRes.error.error.message) {
+                            case "EMAIL_EXISTS": errorMsg = "Inputed email already exists"; break;
+                            case "EMAIL_NOT_FOUND": errorMsg = "Inputed email is not existing"; break;
+                            case "INVALID_PASSWORD": errorMsg = "Inputed password is not existing"; break;
+                            case "USER_DISABLED": errorMsg = "User is disabled"; break;
+                            default: errorMsg = errorRes.error.error.message;
+                        }
 
-                    //     return new AuthActions.LoginFail('hello');
-                    // })
+                        return of(new AuthActions.LoginFail(errorMsg));
+                    })
                 );
 
             }
@@ -64,6 +65,27 @@ export class AuthEffects {
         )
     );
 
+    // Option 1
+    // @Effect({dispatch: false})
+    // authSuccess$ = this.actions$.pipe(
+    //         ofType(AuthActions.LOGIN_SUCCESS),
+    //         tap(() => this.router.navigate(["/shopping-list"]))
+    // );
 
-    constructor(private actions$: Actions, private http: HttpClient) {}
+    // Option 2 - Maybe better one
+    authSuccess$ = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(AuthActions.LOGIN_SUCCESS),
+                tap(() => this.router.navigate(['/shopping-list']))
+            );
+            },
+            {dispatch: false}
+    );
+    
+
+    constructor(
+        private actions$: Actions, 
+        private http: HttpClient,
+        private router: Router) {}
 }
