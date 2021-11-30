@@ -1,9 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
 import { BehaviorSubject, throwError } from "rxjs";
 import { catchError, tap, take } from "rxjs/operators";
 import { User } from "./user/User";
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from "./store/auth.actions";
 
 interface AuthenticationResponse {
     idToken: string;
@@ -19,11 +22,12 @@ export class AuthService {
 
     readonly firebaseSingUpUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
     readonly firebaseLoginUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAbt7Yh4Ln-xBvthdtGWnJvOCkxmK39pok";
-    userCreation = new BehaviorSubject<User>(null);
+    // userCreation = new BehaviorSubject<User>(null);
     tokenExpirationTimer = null;
 
     constructor(private http: HttpClient,
-        private router: Router) {}
+        private router: Router,
+        private store: Store<fromApp.AppState>) {}
 
     signUp(sentEmail: string, sentPassword: string) {
         return this.http.post<AuthenticationResponse>(this.firebaseSingUpUrl,
@@ -72,7 +76,8 @@ export class AuthService {
             expirationDate);
 
         // console.log("test", user, response);
-        this.userCreation.next(user);
+        // this.userCreation.next(user);
+        this.store.dispatch(new AuthActions.Login(user));
 
         localStorage.setItem("userData", JSON.stringify(user));
 
@@ -82,7 +87,8 @@ export class AuthService {
     }
 
     logout() {
-        this.userCreation.next(null);
+        // this.userCreation.next(null);
+        this.store.dispatch(new AuthActions.Logout());
         this.router.navigate(["/auth"]);
         localStorage.removeItem("userData");
 
@@ -113,7 +119,8 @@ export class AuthService {
             new Date(user._tokenExpirationDate));
 
         if (loadedUser.token) {
-            this.userCreation.next(loadedUser);
+            // this.userCreation.next(loadedUser);
+            this.store.dispatch(new AuthActions.Login(loadedUser));
         }
 
     }
