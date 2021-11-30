@@ -30,7 +30,8 @@ export class AuthService {
         private store: Store<fromApp.AppState>) {}
 
     signUp(sentEmail: string, sentPassword: string) {
-        return this.http.post<AuthenticationResponse>(this.firebaseSingUpUrl,
+        return this.http.post<AuthenticationResponse>(
+            this.firebaseSingUpUrl,
             {
                 email: sentEmail,
                 password: sentPassword,
@@ -77,7 +78,7 @@ export class AuthService {
 
         // console.log("test", user, response);
         // this.userCreation.next(user);
-        this.store.dispatch(new AuthActions.Login(user));
+        this.store.dispatch(new AuthActions.LoginSuccess(user));
 
         localStorage.setItem("userData", JSON.stringify(user));
 
@@ -120,7 +121,7 @@ export class AuthService {
 
         if (loadedUser.token) {
             // this.userCreation.next(loadedUser);
-            this.store.dispatch(new AuthActions.Login(loadedUser));
+            this.store.dispatch(new AuthActions.LoginSuccess(loadedUser));
         }
 
     }
