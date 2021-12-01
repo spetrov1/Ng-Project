@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { dispatch } from 'rxjs/internal/observable/pairs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as AuthActions from '../store/auth.actions';

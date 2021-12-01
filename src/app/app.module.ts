@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -25,7 +26,8 @@ import { AuthEffects } from './auth/store/auth.effects';
     CoreModule,
     HttpClientModule,
     StoreModule.forRoot( fromApp.appReducer ),
-    EffectsModule.forRoot([AuthEffects])
+    EffectsModule.forRoot([AuthEffects]),
+    StoreDevtoolsModule.instrument()
   ],
   bootstrap: [AppComponent]
 })
