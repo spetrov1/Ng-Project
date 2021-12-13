@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: recipes-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    myApp: recipes
+  ports:
+    - port: 5000 # TODO Understand what exactly this port is about... Whatever port I put here, the deployment is working as expected
+      targetPort: 80 # exposed by recipes app

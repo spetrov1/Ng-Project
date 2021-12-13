@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipes-app-deployment
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      myApp: recipes
+  template:
+    # TODO Experiment removing following metadata ... I think the matchLabels are enough to be scanned by the service
+    metadata:
+      labels:
+        myApp: recipes
+    spec:
+      containers:
+        - name: my-recipes-app
+          image: petrov165/recipes-app
+          ports:
+            - containerPort: 80 # TODO Unnecessary line I think
+
